@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mini CD Digitale</title>
+    <meta name="description" content="Scansiona e ascolta l'album.">
+    <link rel="stylesheet" href="style.css?v=7">
+  </head>
+  <body>
+    <main class="app-shell" aria-live="polite">
+      <section class="screen screen-loading" id="mainScreen">
+        <div class="poster">
+          <div class="cd-wrap" aria-hidden="true">
+            <div class="cd">
+              <img class="cd-art" src="disc-placeholder.png" alt="">
+              <span class="cd-shine"></span>
+              <span class="cd-hole"></span>
+            </div>
+          </div>
+
+          <div class="text-content" id="textContent">
+            <p class="eyebrow">Laurea di</p>
+            <h1 class="graduate-name">
+              <span>Vincenzo</span>
+              <span>Santonicola</span>
+            </h1>
+            <div class="title-divider" aria-hidden="true">
+              <span></span>
+              <strong></strong>
+              <span></span>
+            </div>
+            <p class="degree-name">Ingegneria Elettronica ed Informatica</p>
+            <p class="date-line">16/07/2026</p>
+            <p class="thanks-line">Grazie per aver partecipato.</p>
+          </div>
+
+          <div class="button-panel" id="buttonPanel">
+            <p class="choice-title">Scegli dove ascoltarla</p>
+
+            <div class="button-stack">
+              <button class="button button-primary" id="appleMusicButton" type="button">
+                Apri Apple Music
+              </button>
+              <button class="button button-primary button-spotify" id="spotifyButton" type="button">
+                Apri Spotify
+              </button>
+            </div>
+
+            <div class="web-links" aria-label="Link web">
+              <a id="appleMusicWebLink" href="https://music.apple.com/us/album/graduation/1451901307">
+                Apri Apple Music web
+              </a>
+              <a id="spotifyWebLink" href="https://open.spotify.com/album/4SZko61aMnmgvNhfhgTuD3">
+                Apri Spotify web
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js?v=3" defer></script>
+  </body>
+</html>

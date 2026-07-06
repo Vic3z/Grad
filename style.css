@@ -1,0 +1,772 @@
+/* ==========================================================================
+   FONT
+   ========================================================================== */
+
+@font-face {
+  /* Defines the custom font name used by the whole page. */
+  font-family: "Compacta Black";
+
+  /* Tries local installed fonts first, then project font files in the root. */
+  src:
+    local("Compacta Black"),
+    local("Compacta"),
+    url("compacta-black.woff2") format("woff2"),
+    url("compacta-black.woff") format("woff"),
+    url("compacta-black.otf") format("opentype");
+
+  /* Treats this font as a heavy/black weight. */
+  font-weight: 900;
+
+  /* Declares the font as normal, not italic. */
+  font-style: normal;
+
+  /* Shows fallback text immediately, then swaps to Compacta when ready. */
+  font-display: swap;
+}
+
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+
+:root {
+  /* Tells the browser the page is designed for dark UI controls. */
+  color-scheme: dark;
+
+  /* Main violet color at the top of the sunset gradient. */
+  --violet: #4d2277;
+
+  /* Main magenta color in the middle of the sunset gradient. */
+  --magenta: #e32684;
+
+  /* Main orange color in the lower part of the sunset gradient. */
+  --orange: #ff8637;
+
+  /* Yellow used only at the bottom of the page background gradient. */
+  --background-gradient-yellow: #ffbb00;
+
+  /* Yellow used only for the horizontal divider lines. */
+  --divider-line-yellow: #ffe83f;
+
+  /* Yellow used only for the small center sparkle in the divider. */
+  --divider-star-yellow: #ffe83f;
+
+  /* Yellow used only for the date text. */
+  --date-yellow: #ffe83f;
+
+  /* Yellow used only for the "Scegli dove ascoltarla" text. */
+  --choice-title-yellow: #ffe83f;
+
+  /* Yellow used only for the Apple Music button background. */
+  --apple-button-yellow: #f94c57;
+
+  /* Text color used only inside the Apple Music button. */
+  --apple-button-text: #ffffff;
+
+  /* Background color used only for the Spotify button. */
+  --spotify-button-background: #1ED760;
+
+  /* Text color used only inside the Spotify button. */
+  --spotify-button-text: #ffffff;
+
+  /* Warm white used for readable text. */
+  --white: #fffdf7;
+
+  /* One font family for the whole site, as requested. */
+  font-family: "Compacta Black", Compacta, sans-serif;
+}
+
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+
+* {
+  /* Includes padding and borders inside declared element widths. */
+  box-sizing: border-box;
+}
+
+html {
+  /* Ensures the document can fill the full browser height. */
+  min-height: 100%;
+
+  /* Provides a solid fallback color behind the gradient. */
+  background: var(--violet);
+}
+
+body {
+  /* Removes the browser default margin around the page. */
+  margin: 0;
+
+  /* Ensures the body is at least as tall as the viewport. */
+  min-height: 100vh;
+
+  /* Uses the modern mobile viewport height when supported. */
+  min-height: 100svh;
+
+  /* Sets the default text color. */
+  color: var(--white);
+
+  /* Uses one single clean sunset gradient, with no extra effects. */
+  background: linear-gradient(180deg, var(--violet) 0%, var(--magenta) 46%, var(--orange) 78%, var(--background-gradient-yellow) 100%);
+
+  /* Prevents accidental horizontal scroll on mobile. */
+  overflow-x: hidden;
+}
+
+button,
+a {
+  /* Removes the gray tap flash on mobile browsers. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==========================================================================
+   PAGE LAYOUT
+   ========================================================================== */
+
+.app-shell {
+  /* Makes this the positioning root for the app content. */
+  position: relative;
+
+  /* Uses grid because it centers one child very cleanly. */
+  display: grid;
+
+  /* Centers the visible screen horizontally and vertically. */
+  place-items: center;
+
+  /* Makes the shell fill the full viewport height. */
+  min-height: 100vh;
+
+  /* Uses accurate mobile viewport height when available. */
+  min-height: 100svh;
+
+  /* Keeps content away from the phone edges. */
+  padding: clamp(18px, 5vw, 40px);
+}
+
+.screen {
+  /* Uses grid so each screen centers its poster. */
+  display: grid;
+
+  /* Makes the screen use the available width. */
+  width: 100%;
+
+  /* Prevents children from forcing horizontal overflow. */
+  min-width: 0;
+
+  /* Centers the poster inside the screen. */
+  place-items: center;
+}
+
+.is-hidden {
+  /* Completely hides inactive screens. */
+  display: none;
+}
+
+.poster {
+  /* Uses flex column to stack every element vertically. */
+  display: flex;
+
+  /* Stacks the CD, title, date, and text from top to bottom. */
+  flex-direction: column;
+
+  /* Centers every child horizontally. */
+  align-items: center;
+
+  /* Centers the whole group vertically inside the viewport. */
+  justify-content: center;
+
+  /* Keeps the poster responsive and never wider than the screen. */
+  width: min(100%, 560px);
+
+  /* Allows text-fit code to measure widths correctly. */
+  min-width: 0;
+
+  /* Gives enough height to center the full composition. */
+  min-height: calc(100svh - clamp(36px, 10vw, 80px));
+
+  /* Adds inner breathing room without creating a card look. */
+  padding: clamp(8px, 2vw, 18px);
+
+  /* Centers all inline text. */
+  text-align: center;
+}
+
+/* ==========================================================================
+   TIMED REVEAL STATES
+   ========================================================================== */
+
+.text-content {
+  /* Keeps the text in the final centered layout even before it is visible. */
+  width: 100%;
+
+  /* Collapses the hidden text so the opening disc can sit in the screen center. */
+  max-height: 0;
+
+  /* Clips hidden text while the block is collapsed. */
+  overflow: hidden;
+
+  /* Hides the text at page load. */
+  opacity: 0;
+
+  /* Starts the text slightly lower for a soft entrance. */
+  transform: translateY(8px);
+
+  /* Prevents interaction or text selection while hidden. */
+  pointer-events: none;
+
+  /* Animates opacity, height, and position over exactly one second. */
+  transition: opacity 1000ms ease, max-height 1000ms ease, transform 1000ms ease;
+}
+
+.text-content.is-visible {
+  /* Opens enough vertical room for all event text. */
+  max-height: 420px;
+
+  /* Makes the event text visible after the 3 second wait. */
+  opacity: 1;
+
+  /* Moves the text into its final centered position. */
+  transform: translateY(0);
+}
+
+.button-panel {
+  /* Stacks the fallback title, buttons, and web links. */
+  display: flex;
+
+  /* Places the button panel items vertically. */
+  flex-direction: column;
+
+  /* Centers all button panel items horizontally. */
+  align-items: center;
+
+  /* Makes the button panel match the poster width. */
+  width: 100%;
+
+  /* Collapses the hidden panel so it does not affect the initial center. */
+  max-height: 0;
+
+  /* Hides the translated buttons while collapsed. */
+  overflow: hidden;
+
+  /* Keeps no vertical gap before the panel is visible. */
+  margin-top: 0;
+
+  /* Hides the buttons at page load. */
+  opacity: 0;
+
+  /* Starts the buttons slightly lower so they can enter from below. */
+  transform: translateY(34px);
+
+  /* Prevents accidental taps before the buttons are visible. */
+  pointer-events: none;
+
+  /* Animates upward movement, fade-in, height, and spacing. */
+  transition: opacity 700ms ease, transform 700ms ease, max-height 700ms ease, margin-top 700ms ease;
+}
+
+.button-panel.is-visible {
+  /* Opens enough vertical room for title, buttons, and web links. */
+  max-height: 360px;
+
+  /* Adds space between the event text and music choices. */
+  margin-top: clamp(18px, 3.4vh, 28px);
+
+  /* Makes the buttons visible after the text has been fully visible for 2 seconds. */
+  opacity: 1;
+
+  /* Moves the buttons into their final centered position. */
+  transform: translateY(0);
+
+  /* Allows taps/clicks after the buttons have appeared. */
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   SPINNING DISC
+   ========================================================================== */
+
+.cd-wrap {
+  /* Uses grid to center the rotating image inside its circular holder. */
+  display: grid;
+
+  /* Keeps the disc responsive on mobile and desktop. */
+  width: clamp(92px, 25vw, 146px);
+
+  /* Forces the holder to stay perfectly square. */
+  aspect-ratio: 1;
+
+  /* Centers the image inside the holder. */
+  place-items: center;
+
+  /* Adds space below the disc before the title starts. */
+  margin: 0 0 clamp(14px, 3vh, 24px);
+
+  /* Makes the holder circular. */
+  border-radius: 50%;
+}
+
+.cd {
+  /* Creates a positioning context for shine and center hole. */
+  position: relative;
+
+  /* Makes the visible disc fill the holder. */
+  width: 100%;
+
+  /* Keeps the disc perfectly square. */
+  aspect-ratio: 1;
+
+  /* Cuts the square PNG into a circle. */
+  overflow: hidden;
+
+  /* Makes the rotating artwork circular. */
+  border-radius: 50%;
+
+  /* Adds a clean rim without adding background effects. */
+  box-shadow: inset 0 0 0 2px rgba(255, 253, 247, 0.9);
+
+  /* Spins the disc continuously. */
+  animation: spin 3.8s linear infinite;
+}
+
+.cd-art {
+  /* Removes the default inline image gap. */
+  display: block;
+
+  /* Makes the PNG fill the circular disc. */
+  width: 100%;
+
+  /* Makes the PNG fill the circular disc vertically. */
+  height: 100%;
+
+  /* Crops the square image if needed while preserving proportions. */
+  object-fit: cover;
+}
+
+.cd-shine {
+  /* Places the highlight over the disc. */
+  position: absolute;
+
+  /* Stretches the highlight to cover the full disc. */
+  inset: 0;
+
+  /* Keeps the highlight circular. */
+  border-radius: inherit;
+
+  /* Keeps the shine element invisible so the uploaded disc image stays clean. */
+  background: transparent;
+
+  /* Prevents the hidden shine layer from affecting the disc artwork. */
+  mix-blend-mode: normal;
+}
+
+.cd-hole {
+  /* Places the center hole above the disc image. */
+  position: absolute;
+
+  /* Centers the hole vertically. */
+  top: 50%;
+
+  /* Centers the hole horizontally. */
+  left: 50%;
+
+  /* Sets the hole size relative to the disc. */
+  width: 20%;
+
+  /* Keeps the hole square before border-radius makes it round. */
+  aspect-ratio: 1;
+
+  /* Draws a simple dark center without adding another gradient. */
+  background: #25021f;
+
+  /* Adds the bright rim with a normal border instead of another gradient. */
+  border: 2px solid rgba(255, 253, 247, 0.78);
+
+  /* Makes the hole circular. */
+  border-radius: 50%;
+
+  /* Moves the hole back by half its own size to truly center it. */
+  transform: translate(-50%, -50%);
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+.eyebrow {
+  /* Removes default paragraph spacing. */
+  margin: 0 0 0.12em;
+
+  /* Uses white for the small heading. */
+  color: var(--white);
+
+  /* Keeps the text responsive. */
+  font-size: clamp(1rem, 4.4vw, 1.65rem);
+
+  /* Uses the black/heavy font weight. */
+  font-weight: 900;
+
+  /* Tightens the poster-style line height. */
+  line-height: 0.9;
+
+  /* Keeps Compacta natural, with no added spacing. */
+  letter-spacing: 0;
+
+  /* Matches the poster style with uppercase text. */
+  text-transform: uppercase;
+
+  /* Improves contrast on the gradient. */
+  text-shadow: 0 3px 14px rgba(54, 7, 40, 0.34);
+}
+
+.graduate-name {
+  /* Lets the JS fitter update this width safely. */
+  width: 100%;
+
+  /* Caps the title width on large screens. */
+  max-width: 560px;
+
+  /* Prevents the title from forcing horizontal overflow. */
+  min-width: 0;
+
+  /* Removes default heading spacing. */
+  margin: 0;
+
+  /* Makes the name orange, as requested. */
+  color: var(--orange);
+
+  /* Responsive title size; JS may reduce it if needed. */
+  font-size: var(--name-size, clamp(2.35rem, 12vw, 5.7rem));
+
+  /* Uses the black/heavy font weight. */
+  font-weight: 900;
+
+  /* Creates the compact stacked title look. */
+  line-height: 1;
+
+  /* Keeps Compacta natural, with no added spacing. */
+  letter-spacing: 0;
+
+  /* Makes the title match the reference style. */
+  text-transform: uppercase;
+
+  /* Gives the name readable separation from the gradient. */
+  text-shadow: 0 5px 18px rgba(54, 7, 40, 0.34);
+}
+
+.graduate-name span {
+  /* Puts first name and surname on separate lines. */
+  display: block;
+
+  /* Prevents each line from wrapping into broken fragments. */
+  white-space: nowrap;
+}
+
+.title-divider {
+  /* Creates a horizontal divider with a center mark. */
+  display: grid;
+
+  /* Gives equal line lengths on the left and right for symmetry. */
+  grid-template-columns: 1fr auto 1fr;
+
+  /* Adds space between the lines and center mark. */
+  gap: clamp(8px, 2.4vw, 16px);
+
+  /* Vertically centers line and star. */
+  align-items: center;
+
+  /* Keeps the divider responsive. */
+  width: min(100%, 390px);
+
+  /* Adds vertical space around the divider. */
+  margin: clamp(10px, 2.2vh, 16px) 0 clamp(12px, 2.4vh, 18px);
+}
+
+.title-divider span {
+  /* Sets the thickness of each divider line. */
+  height: clamp(3px, 0.8vw, 5px);
+
+  /* Colors the divider lines with their own yellow variable. */
+  background: var(--divider-line-yellow);
+
+  /* Rounds the ends of the divider lines. */
+  border-radius: 999px;
+}
+
+.title-divider strong {
+  /* Sets the center mark size. */
+  width: clamp(14px, 4vw, 26px);
+
+  /* Keeps the center mark square. */
+  aspect-ratio: 1;
+
+  /* Colors the center mark with its own yellow variable. */
+  background: var(--divider-star-yellow);
+
+  /* Cuts the square into a simple sparkle shape. */
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+.degree-name,
+.date-line,
+.thanks-line,
+.choice-title {
+  /* Removes default paragraph spacing. */
+  margin: 0;
+
+  /* Uses the black/heavy font weight. */
+  font-weight: 900;
+
+  /* Keeps the poster typography tight. */
+  line-height: 0.95;
+
+  /* Keeps Compacta natural, with no added spacing. */
+  letter-spacing: 0;
+
+  /* Makes all main lines uppercase. */
+  text-transform: uppercase;
+
+  /* Improves readability on the gradient. */
+  text-shadow: 0 4px 16px rgba(54, 7, 40, 0.34);
+}
+
+.degree-name {
+  /* Keeps the degree centered and responsive. */
+  width: min(100%, 500px);
+
+  /* Uses white for maximum contrast. */
+  color: var(--white);
+
+  /* Sets responsive degree text size. */
+  font-size: clamp(1.22rem, 5.7vw, 2.55rem);
+}
+
+.date-line {
+  /* Adds a small gap above the date. */
+  margin-top: clamp(8px, 1.7vh, 12px);
+
+  /* Colors the date with its own yellow variable. */
+  color: var(--date-yellow);
+
+  /* Sets responsive date size. */
+  font-size: clamp(1.72rem, 7.7vw, 3.1rem);
+}
+
+.thanks-line {
+  /* Adds a calm gap before the closing thank-you. */
+  margin-top: clamp(12px, 2.5vh, 20px);
+
+  /* Keeps the thank-you centered and readable. */
+  width: min(100%, 500px);
+
+  /* Uses white for the thank-you line. */
+  color: var(--white);
+
+  /* Sets responsive thank-you size. */
+  font-size: clamp(1rem, 4.3vw, 1.55rem);
+}
+
+.choice-title {
+  /* Removes extra top margin because the button panel already creates the gap. */
+  margin-top: 0;
+
+  /* Colors the choice title with its own yellow variable. */
+  color: var(--choice-title-yellow);
+
+  /* Sets responsive fallback title size. */
+  font-size: clamp(1.35rem, 6vw, 2.15rem);
+}
+
+/* ==========================================================================
+   FALLBACK BUTTONS
+   ========================================================================== */
+
+.button-stack {
+  /* Stacks the two app-first buttons vertically. */
+  display: grid;
+
+  /* Makes the buttons use the same centered width. */
+  width: min(100%, 380px);
+
+  /* Adds vertical space between the buttons. */
+  gap: 12px;
+
+  /* Adds space above the button group. */
+  margin-top: clamp(14px, 2.8vh, 22px);
+}
+
+.button {
+  /* Makes each button fill the button stack width. */
+  width: 100%;
+
+  /* Ensures buttons are comfortable to tap on mobile. */
+  min-height: 56px;
+
+  /* Adds horizontal breathing room inside each button. */
+  padding: 0 18px;
+
+  /* Uses the dedicated Apple Music button text color. */
+  color: var(--apple-button-text);
+
+  /* Inherits Compacta from the page. */
+  font: inherit;
+
+  /* Sets responsive button text size. */
+  font-size: clamp(1.04rem, 4.6vw, 1.3rem);
+
+  /* Uses the black/heavy font weight. */
+  font-weight: 900;
+
+  /* Keeps button text compact. */
+  line-height: 1;
+
+  /* Makes button labels uppercase. */
+  text-transform: uppercase;
+
+  /* Shows the pointer cursor on desktop. */
+  cursor: pointer;
+
+  /* Colors the Apple Music button with its own yellow variable. */
+  background: var(--apple-button-yellow);
+
+  /* Removes default browser button borders. */
+  border: 0;
+
+  /* Rounds the buttons without making the whole page card-like. */
+  border-radius: 14px;
+}
+
+.button-spotify {
+  /* Uses the dedicated Spotify button text color. */
+  color: var(--spotify-button-text);
+
+  /* Uses the dedicated Spotify button background color. */
+  background: var(--spotify-button-background);
+}
+
+.button:active {
+  /* Gives a subtle pressed state on tap/click. */
+  transform: translateY(1px) scale(0.99);
+}
+
+.web-links {
+  /* Lays out the two web links in a centered flexible row. */
+  display: flex;
+
+  /* Allows links to wrap on narrow phones. */
+  flex-wrap: wrap;
+
+  /* Centers wrapped link rows. */
+  justify-content: center;
+
+  /* Sets a consistent max width with the buttons. */
+  width: min(100%, 380px);
+
+  /* Adds horizontal and vertical spacing between links. */
+  gap: 6px 16px;
+
+  /* Adds space above the web links. */
+  margin-top: 14px;
+}
+
+.web-links a {
+  /* Uses white text for secondary links. */
+  color: var(--white);
+
+  /* Sets responsive link text size. */
+  font-size: clamp(0.88rem, 3.8vw, 1rem);
+
+  /* Uses the black/heavy font weight. */
+  font-weight: 900;
+
+  /* Gives each link a comfortable tap height. */
+  line-height: 38px;
+
+  /* Makes link labels uppercase. */
+  text-transform: uppercase;
+
+  /* Uses a soft underline color. */
+  text-decoration-color: rgba(255, 253, 247, 0.58);
+
+  /* Moves the underline away from the text. */
+  text-underline-offset: 5px;
+}
+
+/* ==========================================================================
+   ANIMATION
+   ========================================================================== */
+
+@keyframes spin {
+  /* Rotates the disc one complete turn. */
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE TUNING
+   ========================================================================== */
+
+@media (max-height: 700px) {
+  .poster {
+    /* Reduces vertical padding on short screens. */
+    padding-top: 0;
+
+    /* Reduces vertical padding on short screens. */
+    padding-bottom: 0;
+  }
+
+  .cd-wrap {
+    /* Makes the disc smaller on short screens. */
+    width: clamp(68px, 18vw, 104px);
+
+    /* Tightens the gap under the disc on short screens. */
+    margin-bottom: 10px;
+  }
+
+  .graduate-name {
+    /* Reduces the name size on short screens. */
+    font-size: var(--name-size, clamp(2rem, 10.5vw, 4.2rem));
+  }
+
+  .degree-name {
+    /* Reduces the degree size on short screens. */
+    font-size: clamp(1.02rem, 4.8vw, 1.8rem);
+  }
+
+  .date-line {
+    /* Reduces the date size on short screens. */
+    font-size: clamp(1.45rem, 6.7vw, 2.35rem);
+  }
+}
+
+@media (min-width: 720px) {
+  .poster {
+    /* Allows a wider centered composition on desktop. */
+    width: min(100%, 760px);
+  }
+
+  .graduate-name {
+    /* Allows the desktop title to breathe more. */
+    max-width: 720px;
+
+    /* Sets a controlled desktop title size. */
+    font-size: var(--name-size, clamp(4rem, 7.4vw, 5.85rem));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* Disables smooth scrolling for users who prefer less motion. */
+    scroll-behavior: auto !important;
+
+    /* Makes animations effectively instant. */
+    animation-duration: 0.001ms !important;
+
+    /* Prevents animations from repeating. */
+    animation-iteration-count: 1 !important;
+
+    /* Makes transitions effectively instant. */
+    transition-duration: 0.001ms !important;
+  }
+}
