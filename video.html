@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Laurea</title>
+    <meta name="description" content="Video della laurea di Vincenzo Santonicola.">
+    <link rel="stylesheet" href="style.css?v=8">
+  </head>
+  <body class="video-page">
+    <main class="video-shell">
+      <section class="video-stage" aria-label="Video della laurea">
+        <video
+          class="graduation-video"
+          id="graduationVideo"
+          src="graduation-video.mp4"
+          autoplay
+          playsinline
+          controls
+          preload="auto"
+        ></video>
+
+        <button class="video-play-fallback is-hidden" id="videoPlayFallback" type="button">
+          Avvia video con audio
+        </button>
+
+        <a class="video-back-link" href="index.html">
+          Torna indietro
+        </a>
+      </section>
+    </main>
+
+    <script src="video.js?v=1" defer></script>
+  </body>
+</html>
