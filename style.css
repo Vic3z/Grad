@@ -68,15 +68,6 @@
   /* Text color used only inside the Spotify button. */
   --spotify-button-text: #ffffff;
 
-  /* Background color used only for the fixed bottom video button. */
-  --video-button-background: rgba(255, 253, 247, 0.2);
-
-  /* Border color used only for the fixed bottom video button. */
-  --video-button-border: rgba(255, 253, 247, 0.42);
-
-  /* Text color used only inside the fixed bottom video button. */
-  --video-button-text: #fffdf7;
-
   /* Background color used behind the dedicated video page player. */
   --video-frame-background: #080208;
 
@@ -158,9 +149,6 @@ a {
 
   /* Keeps content away from the phone edges. */
   padding: clamp(18px, 5vw, 40px);
-
-  /* Reserves room for the fixed video button at the bottom of the screen. */
-  padding-bottom: calc(clamp(76px, 11vh, 112px) + env(safe-area-inset-bottom));
 }
 
 .screen {
@@ -323,6 +311,30 @@ a {
 
   /* Makes the holder circular. */
   border-radius: 50%;
+}
+
+.cd-link {
+  /* Removes the default underline because the disc itself is the link. */
+  text-decoration: none;
+
+  /* Shows clearly on desktop that the disc is clickable. */
+  cursor: pointer;
+
+  /* Makes taps feel immediate on mobile. */
+  touch-action: manipulation;
+}
+
+.cd-link:focus-visible {
+  /* Draws an accessible keyboard focus ring around the clickable disc. */
+  outline: 3px solid rgba(255, 253, 247, 0.88);
+
+  /* Moves the focus ring slightly away from the disc edge. */
+  outline-offset: 8px;
+}
+
+.cd-link:active {
+  /* Gives a tiny pressed state when the disc is tapped. */
+  transform: scale(0.98);
 }
 
 .cd {
@@ -709,87 +721,6 @@ a {
 
   /* Moves the underline away from the text. */
   text-underline-offset: 5px;
-}
-
-/* ==========================================================================
-   FIXED VIDEO BUTTON
-   ========================================================================== */
-
-.video-link {
-  /* Keeps the video button pinned to the lower part of the viewport. */
-  position: fixed;
-
-  /* Centers the fixed button horizontally. */
-  left: 50%;
-
-  /* Keeps the button above phone home indicators and browser bars. */
-  bottom: calc(14px + env(safe-area-inset-bottom));
-
-  /* Places the fixed button above the page content. */
-  z-index: 20;
-
-  /* Uses inline-flex so the label stays centered vertically. */
-  display: inline-flex;
-
-  /* Centers the label horizontally. */
-  justify-content: center;
-
-  /* Centers the label vertically. */
-  align-items: center;
-
-  /* Keeps the button responsive on phones and not too wide on desktop. */
-  width: min(calc(100% - 32px), 380px);
-
-  /* Gives the button a comfortable mobile tap target. */
-  min-height: 46px;
-
-  /* Adds horizontal spacing inside the button. */
-  padding: 0 18px;
-
-  /* Uses the dedicated video button text color. */
-  color: var(--video-button-text);
-
-  /* Uses the same font as the rest of the page. */
-  font: inherit;
-
-  /* Sets a readable but discreet button size. */
-  font-size: clamp(0.98rem, 4vw, 1.14rem);
-
-  /* Keeps the label bold like the event typography. */
-  font-weight: 900;
-
-  /* Keeps the label compact inside the pill. */
-  line-height: 1;
-
-  /* Makes the label match the poster-style uppercase language. */
-  text-transform: uppercase;
-
-  /* Removes the default underline from the link. */
-  text-decoration: none;
-
-  /* Makes the button semi-transparent. */
-  background: var(--video-button-background);
-
-  /* Adds a soft translucent edge to the button. */
-  border: 1px solid var(--video-button-border);
-
-  /* Gives the button a pill shape. */
-  border-radius: 999px;
-
-  /* Blurs the gradient behind the translucent button on supported browsers. */
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-
-  /* Adds separation from the background without making a heavy card. */
-  box-shadow: 0 12px 32px rgba(54, 7, 40, 0.2);
-
-  /* Moves the button back by half of its own width after left: 50%. */
-  transform: translateX(-50%);
-}
-
-.video-link:active {
-  /* Gives a small pressed state while preserving horizontal centering. */
-  transform: translateX(-50%) translateY(1px) scale(0.99);
 }
 
 /* ==========================================================================

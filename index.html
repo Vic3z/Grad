@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mini CD Digitale</title>
     <meta name="description" content="Scansiona e ascolta l'album.">
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
   </head>
   <body>
     <main class="app-shell" aria-live="polite">
       <section class="screen screen-loading" id="mainScreen">
         <div class="poster">
-          <div class="cd-wrap" aria-hidden="true">
+          <a class="cd-wrap cd-link" href="video.html" aria-label="Guarda il video della laurea">
             <div class="cd">
               <img class="cd-art" src="disc-placeholder.png" alt="">
               <span class="cd-shine"></span>
               <span class="cd-hole"></span>
             </div>
-          </div>
+          </a>
 
           <div class="text-content" id="textContent">
             <p class="eyebrow">Laurea di</p>
@@ -59,10 +59,6 @@
         </div>
       </section>
     </main>
-
-    <a class="video-link" href="video.html" aria-label="Guarda il video della laurea">
-      Guarda il video
-    </a>
 
     <script src="script.js?v=3" defer></script>
   </body>
