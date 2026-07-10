@@ -16,8 +16,6 @@ const textContent = document.querySelector("#textContent");
 const buttonPanel = document.querySelector("#buttonPanel");
 const appleMusicButton = document.querySelector("#appleMusicButton");
 const spotifyButton = document.querySelector("#spotifyButton");
-const appleMusicWebLink = document.querySelector("#appleMusicWebLink");
-const spotifyWebLink = document.querySelector("#spotifyWebLink");
 
 let sequenceStopped = false;
 
@@ -165,25 +163,7 @@ async function startAutoSequence() {
   resetReveal();
 
   await startRevealSequence();
-  if (document.hidden) {
-    return;
-  }
-
-  await startAppAttempts();
-  if (!document.hidden) {
-    showButtons();
-  }
-}
-
-async function startAppAttempts() {
-  tryOpenApp(getSpotifyAppLink(), 1000);
-  await wait(1000);
-
-  if (document.hidden) {
-    return;
-  }
-
-  await tryOpenApp(getAppleMusicAppLink(), 1600);
+  showButtons();
 }
 
 async function startRevealSequence() {
@@ -211,8 +191,6 @@ async function openSpotifyAppFirst() {
 
 appleMusicButton.addEventListener("click", openAppleMusicAppFirst);
 spotifyButton.addEventListener("click", openSpotifyAppFirst);
-appleMusicWebLink.href = LINKS.appleMusic.web;
-spotifyWebLink.href = LINKS.spotify.web;
 
 window.addEventListener("resize", fitGraduateNames);
 window.addEventListener("orientationchange", fitGraduateNames);
